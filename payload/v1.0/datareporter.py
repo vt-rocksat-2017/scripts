@@ -9,7 +9,7 @@ from socket import socket, AF_INET, SOCK_STREAM, SOCK_DGRAM
 from Queue import Queue
 
 class DataReporter(Thread):
-    max_msg_len = 252
+    max_msg_len = 245
     class _StopReporter(): pass # reporter shutdown token class
 
     def __init__(self, target):
