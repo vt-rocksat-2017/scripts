@@ -24,9 +24,11 @@ if __name__ == "__main__":
     ts_help = "Startup Timestamp: %default"
     callsign_help = "Callsign, [default=%default]"
     watchdog_help = "Watchdog Timeout, [default=%default]"
+    delay_help = "Startup Delay [s], [default=%default]"
     parser.add_option("--ts" , dest = "startup_ts" , action = "store", type = "string", default=startup_ts , help = ts_help)
     parser.add_option("--cs" , dest = "callsign"   , action = "store", type = "string", default='KJ4WRQ'   , help = callsign_help)
     parser.add_option("--wd" , dest = "wd_timeout" , action = "store", type = "float" , default='30.0'     , help = watchdog_help)
+    parser.add_option("--sd","--delay",dest="delay", action = "store", type = "float" , default=".1"       , help = delay_help)
 
     #HW TLM Serial Port
     h_ser_port = "HW TLM Serial Port, [default=%default]"
@@ -47,8 +49,14 @@ if __name__ == "__main__":
     #Command Radio, GNU Radio Network Parameters
     h_gr_ip    = "GNU Radio Flowgraph IP Address, [default=%default]"
     h_gr_port  = "GNU Radio Flowgraph Port Number, [default=%default]"
+    h_gr_path  = "GNU Radio Flowgraph Path, [default=%default]"
+    h_gr_rate  = "Rate to Write to GNU Radio [s], [default=%default]"
     parser.add_option("-e", dest = "gr_ip"   , action = "store", type = "string", default='0.0.0.0', help = h_gr_ip)
     parser.add_option("-f", dest = "gr_port" , action = "store", type = "int"   , default='52001'  , help = h_gr_port)
+    parser.add_option("-g", dest = "gr_path" , action = "store", type = "string", 
+                            default='/home/zleffke/workspace/rocksat/2017/waveforms/command/v2/',  
+                            help = h_gr_path)
+    parser.add_option("-i", dest = "gr_rate", action = "store", type = "float", default='0.044', help = h_gr_rate)
 
     (options, args) = parser.parse_args()
     #--------END Command Line option parser------------------------------------------------------

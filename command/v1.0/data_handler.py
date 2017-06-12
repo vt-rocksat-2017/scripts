@@ -24,8 +24,8 @@ class Data_Handler(threading.Thread):
         self.options = options
         self.mode = mode
         self.logger = logger
-        print "setting up {} Data Handler".format(self.mode)
-        self.logger.info("setting up {} Data Handler".format(self.mode))
+        print "Initializing {} Data Handler".format(self.mode)
+        self.logger.info("Initializing {} Data Handler".format(self.mode))
 
         self.q = Queue()
 
@@ -42,20 +42,25 @@ class Data_Handler(threading.Thread):
         try:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            self.sock.settimeout(1) #one second timeout
             self.sock.bind((self.ip, self.port))
-            self.logger.info("Ready to send receive {} data on: {0}:{1}".format(self.mode, self.ip, self.port))
-            print "Ready to send receive {} data on: {0}:{1}".format(self.mode, self.ip, self.port)
+            self.logger.info("Ready to receive {} data on: {}:{}".format(self.mode, self.ip, self.port))
+            print "Ready to receive {} data on: {}:{}".format(self.mode, self.ip, self.port)
         except:
-            self.logger.info("Could not set up {} data on: {0}:{1}".format(self.mode, self.ip, self.port))
+            self.logger.info("Could not set up {} data on: {}:{}".format(self.mode, self.ip, self.port))
 
         while (not self._stop.isSet()):
-            data, addr = self.sock.recvfrom(1024) # block until data received on control port
-            #should check message lengh here and add error handling (exceptions)
-            print len(data), binascii.hexlify(data)
-            msg = []
-            msg.append(self.msg_type)
-            msg.extend(data)
-            self.q.put(msg)
+            try:
+                data, addr = self.sock.recvfrom(1024) # block until data received on control port
+                #should check message lengh here and add error handling (exceptions)
+                #print len(data), binascii.hexlify(data)
+                msg = []
+                msg.append(self.msg_type)
+                msg.extend(data)
+                self.q.put(bytearray(msg))
+            except: #will fire when socket times out
+                #needed to properly shutdown thread.
+                continue
         self.sock.close()
         self.logger.info("{} Data Handler Terminated".format(self.mode))
 

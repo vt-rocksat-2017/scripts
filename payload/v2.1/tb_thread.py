@@ -134,7 +134,7 @@ class TopBlockThread(threading.Thread):
         if self.p:
             if self.mode == 'ais':
                 print 'Sending Character to terminate AIS Flowgraph'
-                self.logger.info('Sending Character to termiante AIS Flowgraph')
+                self.logger.info('Sending Character to terminate AIS Flowgraph')
                 self.p.stdin.write('\n')
                 
             print 'Terminating subprocess: {}'.format(str(self.p.pid))
