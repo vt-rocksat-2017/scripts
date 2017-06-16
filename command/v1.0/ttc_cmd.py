@@ -30,7 +30,7 @@ if __name__ == "__main__":
     parser.add_option("--ts" , dest = "startup_ts" , action = "store", type = "string", default=startup_ts , help = ts_help)
     parser.add_option("--cs" , dest = "callsign"   , action = "store", type = "string", default='KJ4WRQ'   , help = callsign_help)
     parser.add_option("--wd" , dest = "wd_timeout" , action = "store", type = "float" , default='30.0'     , help = watchdog_help)
-    parser.add_option("--sd","--delay",dest="delay", action = "store", type = "float" , default=".1"       , help = delay_help)
+    parser.add_option("--sd","--delay",dest="delay", action = "store", type = "float" , default="10"       , help = delay_help)
 
     #HW TLM Serial Port
     h_ser_port = "HW TLM Serial Port, [default=%default]"

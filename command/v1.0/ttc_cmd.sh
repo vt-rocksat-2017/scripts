@@ -12,20 +12,21 @@
 # Reference: http://blog.scphillips.com/posts/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/
 ### END INIT INFO
 
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
+#PATH=/sbin:/bin:/usr/sbin:/usr/bin
 LD_LIBRARY_PATH="/usr/local/lib:/usr/lib"
 export PATH LD_LIBRARY_PATH
 
 # Change the next 3 lines to suit where you install your script and what you want to call it
 DIR=/home/root/scripts/v1.0
-DAEMON=$DIR/command.py
-DAEMON_NAME=command
+DAEMON=$DIR/ttc_cmd.py
+DAEMON_NAME=ttc_cmd
 
 # Add any command line options for your daemon here
 #DAEMON_OPTS="--tx-gain=75 --bb-gain=0.4 --rx-gain=10 --sd 10 -g \'/home/root/waveforms/v3\'"
-DAEMON_OPTS="--tx-gain=75 --bb-gain=0.4 --rx-gain=10 --sd 10"
+DAEMON_OPTS=" --tx-gain=75 --bb-gain=0.4 --rx-gain=10 --sd 10"
 DATETIME=$(date -u +%Y%m%d_%H%M%S.%N_UTC)
-LOG=/mnt/log/command.log
+LOG=/mnt/log/ttc_cmd.log
 
 # This next line determines what user the script runs as.
 # Root generally not recommended but necessary if you are using the Raspberry Pi GPIO from Python.
@@ -39,16 +40,17 @@ PIDFILE=/var/run/$DAEMON_NAME.pid
 do_start () {
     #log_daemon_msg "Starting system $DAEMON_NAME daemon"
     start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --chuid $DAEMON_USER --startas $DAEMON -- $DAEMON_OPTS
-    #start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --chuid $DAEMON_USER --startas $DAEMON -- $DAEMON_OPTS
+    #start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --chuid $DAEMON_USER --startas $DAEMON #-- $DAEMON_OPTS <<<---This works!
+    #start-stop-daemon --start --quiet --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --chuid $DAEMON_USER --startas $DAEMON > $LOG #-- $DAEMON_OPTS <<<---This works!
     #start-stop-daemon --start --quiet --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --chuid $DAEMON_USER --startas $DAEMON -- $DAEMON_OPTS > $OUT_LOG 2> $ERR_LOG
     #start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_OPTS  > /dev/null
     #log_end_msg $?
-    echo $DATETIME": Payload Service Started" >> $LOG
+    echo $DATETIME": TTC Service Started" >> $LOG
 }
 do_stop () {
     #log_daemon_msg "Stopping system $DAEMON_NAME daemon"
     start-stop-daemon --stop --pidfile $PIDFILE --retry 10
-    echo $DATETIME": Payload Service Stopped" >> $LOG
+    echo $DATETIME": TTC Service Stopped" >> $LOG
     #log_end_msg $?
 }
 
@@ -60,7 +62,7 @@ case "$1" in
 
     restart|reload|force-reload)
      	echo "Restarting $DAEMON_NAME Service"
-	echo $DATETIME": Payload Service Restarted" > $LOG
+	echo $DATETIME": TTC Service Restarted" > $LOG
         do_stop
         do_start
         ;;

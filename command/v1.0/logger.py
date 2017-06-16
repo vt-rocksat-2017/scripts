@@ -22,7 +22,7 @@ def setup_logger(log_name, level=logging.INFO, ts = None):
     l = logging.getLogger(log_name)
     if ts == None: ts = str(get_uptime())
     log_file = "{:s}_{:s}.log".format(log_name, ts)
-    log_path = os.getcwd() + '/log/' + log_file
+    log_path = '/mnt/log/' + log_file
     print log_path
     formatter = MyFormatter(fmt='%(asctime)s UTC - %(threadName)s - %(levelname)s - %(message)s',datefmt='%Y-%m-%d %H:%M:%S.%f')
     #fileHandler = logging.FileHandler(log_path, mode='w')
