@@ -49,8 +49,8 @@ class Radio_Thread(threading.Thread):
         print "Setting up GNU Radio Flowgraph..."
         self.logger.info("Setting up GNU Radio Flowgraph...")
         sys.path.insert(0, self.options.gr_path)
-        from tx_scram_sock import *
-        self.tb = tx_scram_sock()
+        from cmd_trx import *
+        self.tb = cmd_trx(tx_freq=options.tx_freq, tx_gain=options.tx_gain, bb_gain=options.bb_gain, rx_freq=options.rx_freq, rx_gain=options.rx_gain)
         self.tb.start()
         print "GNU Radio Flowgraph Launched"
         self.logger.info("GNU Radio Flowgraph Launched")

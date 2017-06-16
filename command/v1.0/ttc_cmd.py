@@ -6,9 +6,13 @@ import math, sys, os, socket, time, struct, traceback, binascii, logging
 from optparse import OptionParser
 import threading
 import datetime as dt
+from gnuradio import eng_notation
+from gnuradio.eng_option import eng_option
+
 from main_thread import *
 
 def main(options):
+    time.sleep(options.delay)
     main_thread = Main_Thread(options)
     main_thread.daemon = True
     main_thread.run()
@@ -17,9 +21,7 @@ def main(options):
 if __name__ == "__main__":
     startup_ts = dt.datetime.utcnow().strftime("%Y%m%d_%H%M%S")
     #--------START Command Line option parser------------------------------------------------------
-    usage = "usage: %prog "
-    parser = OptionParser(usage = usage)
-    
+    parser = OptionParser(usage="%prog: [options]", option_class=eng_option)
     #Startup Timestamp
     ts_help = "Startup Timestamp: %default"
     callsign_help = "Callsign, [default=%default]"
@@ -53,12 +55,28 @@ if __name__ == "__main__":
     h_gr_rate  = "Rate to Write to GNU Radio [s], [default=%default]"
     parser.add_option("-e", dest = "gr_ip"   , action = "store", type = "string", default='0.0.0.0', help = h_gr_ip)
     parser.add_option("-f", dest = "gr_port" , action = "store", type = "int"   , default='52001'  , help = h_gr_port)
-    parser.add_option("-g", dest = "gr_path" , action = "store", type = "string", 
-                            default='/home/zleffke/workspace/rocksat/2017/waveforms/command/v2/',  
-                            help = h_gr_path)
-    parser.add_option("-i", dest = "gr_rate", action = "store", type = "float", default='0.044', help = h_gr_rate)
+    parser.add_option("-g", dest = "gr_path" , action = "store", type = "string", default='/home/root/waveforms/v3/',help = h_gr_path)
+    parser.add_option("-i", dest = "gr_rate", action = "store", type = "float", default='0.04', help = h_gr_rate)
+
+    #Command Radio, GNU Radio RF Parameters
+    parser.add_option(
+        "", "--tx-freq", dest="tx_freq", type="eng_float", default=eng_notation.num_to_str(2395e6),
+        help="Set tx_freq [default=%default]")
+    parser.add_option(
+        "", "--tx-gain", dest="tx_gain", type="eng_float", default=eng_notation.num_to_str(75),
+        help="Set tx_gain [default=%default]")
+    parser.add_option(
+        "", "--bb-gain", dest="bb_gain", type="eng_float", default=eng_notation.num_to_str(.4),
+        help="Set bb_gain [default=%default]")
+    parser.add_option(
+        "", "--rx-freq", dest="rx_freq", type="eng_float", default=eng_notation.num_to_str(433e6),
+        help="Set RX Freq [default=%default]")
+    parser.add_option(
+        "", "--rx-gain", dest="rx_gain", type="intx", default=20,
+        help="Set RX Gain [default=%default]")
 
     (options, args) = parser.parse_args()
     #--------END Command Line option parser------------------------------------------------------
+    
     main(options)
 

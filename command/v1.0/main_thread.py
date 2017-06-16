@@ -93,6 +93,8 @@ class Main_Thread(threading.Thread):
                     if up_cmd != self.mode: #Switch Modes
                         self.logger.info('Received command to switch modes from uplink')
                         self.switch_mode(up_cmd)
+                    elif up_cmd == self.mode:
+                        self.watchdog.reset()
 
                 #1. check downlink queues
                 msg = bytearray()
