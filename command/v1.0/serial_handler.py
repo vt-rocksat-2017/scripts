@@ -35,8 +35,8 @@ class Serial_Handler(threading.Thread):
 
         self.dev = self.options.ser_port
         self.baud   = self.options.ser_baud
-        self.startup_delay = 0
-        self._ser_fault = False
+        self.startup_delay = 1
+        self._ser_fault = True
         self.err_count = 0
         self.ser_data = ""
         self.port_flag = False
@@ -67,25 +67,11 @@ class Serial_Handler(threading.Thread):
                 time.sleep(1)
                 try:
                     dev = self._find_serial_port()
-                    #print 'pong', dev
-                    #self.dev = dev
                     if dev != None: 
-                        #if self.ser.isOpen():
-                        #    print "ISOPEN"
                         self._Open_Serial(dev)
                 except Exception as e:
                     self._Handle_Exception(e)
-                    
-                
-                #if self._ser_fault == True: #Try other serial port
-                #    time.sleep(1) #but wait a second first
-                #    try:
-                #        self._find_serial_port()
-                #        self._Open_Serial(self.dev)
-                #        #self.ser_data = "$,RECONNECTED TO SERIAL PORT," + "/dev/ttyACM1,"
-                #        self._update_queue()
-                #    except Exception as e:
-                #        self._Handle_Exception(e)
+        
         self.ser.close()
         self.logger.info("Closing Serial Port.")
         self.logger.info("Serial Data Handler Terminated.")
@@ -120,16 +106,17 @@ class Serial_Handler(threading.Thread):
         return None  #if it gets to here, means didn't find suitable match in for loop
             
     def _Open_Serial(self, dev):
-        self.dev = dev
-        
+        self.dev = dev        
         #print self.dev
-        self.ser = serial.Serial(self.dev, self.baud, dsrdtr=True, xonxoff=True, rtscts=True)
+        #self.ser = serial.Serial(self.dev, self.baud, dsrdtr=False, xonxoff=False, rtscts=False)
+        self.ser = serial.Serial(self.dev, self.baud)
         self.logger.info("Opened Serial Port: {:s}".format(self.dev))
-        self.ser.flushInput()
-        self._ser_fault = False
+        #time.sleep(0.5)
+        #self.ser.flushInput()
         self.ser_data = "$,SERIAL PORT CONNECTED,{}".format(self.dev)
         self._update_queue()
         self._ser_fault = False
+        
 
     def _Handle_Exception(self, e):
         try:

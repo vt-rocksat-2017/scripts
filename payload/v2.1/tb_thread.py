@@ -61,7 +61,8 @@ class TopBlockThread(threading.Thread):
 
     mode_binaries = {
             #I used the full path for adsb because we modified the stock modes_rx
-            "adsb":     os.path.join(os.path.dirname(__file__), "modes_rx"),
+            #"adsb":     os.path.join(os.path.dirname(__file__), "modes_rx --gain 10"),
+            "adsb":     "/home/root/scripts/v2.1/modes_rx --gain 10",
             "ais":      "/home/root/waveforms/ais_rx.py --rx-gain 10",
             "testmode": "testmode/top_block.py",
     }

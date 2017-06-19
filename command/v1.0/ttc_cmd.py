@@ -69,7 +69,7 @@ if __name__ == "__main__":
         "", "--bb-gain", dest="bb_gain", type="eng_float", default=eng_notation.num_to_str(.4),
         help="Set bb_gain [default=%default]")
     parser.add_option(
-        "", "--rx-freq", dest="rx_freq", type="eng_float", default=eng_notation.num_to_str(433e6),
+        "", "--rx-freq", dest="rx_freq", type="eng_float", default=eng_notation.num_to_str(1265e6),
         help="Set RX Freq [default=%default]")
     parser.add_option(
         "", "--rx-gain", dest="rx_gain", type="intx", default=20,

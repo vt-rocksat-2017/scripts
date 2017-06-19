@@ -52,14 +52,14 @@ class Main_Thread(threading.Thread):
         #self.watchdog.daemon = True
         self.watchdog = Watchdog(self.options.wd_timeout, self.logger, self.watchdog_event)
 
-        self.ADSB_CMD = bytearray(256)
-        self.AIS_CMD = bytearray(256)
-        for i, b in enumerate(self.AIS_CMD): self.AIS_CMD[i] = 0xFF
-        print 'ADSB: ', binascii.hexlify(self.ADSB_CMD)
-        print ' AIS: ', binascii.hexlify(self.AIS_CMD)
+        #self.ADSB_CMD = bytearray(256)
+        #self.AIS_CMD = bytearray(256)
+        #for i, b in enumerate(self.AIS_CMD): self.AIS_CMD[i] = 0xFF
+        #print 'ADSB: ', binascii.hexlify(self.ADSB_CMD)
+        #print ' AIS: ', binascii.hexlify(self.AIS_CMD)
         
-        self.ADSB_CMD = 'adsb_uplink_cmd'
-        self.AIS_CMD = 'ais_uplink_cmd'
+        self.ADSB_CMD = 'adsb'
+        self.AIS_CMD = 'ais'
 
     def run(self):
         print "Main Thread Started..."
@@ -83,12 +83,15 @@ class Main_Thread(threading.Thread):
                     rx_msg = self.radio_thread.rx_q.get()
                     print rx_msg
                     up_cmd = ''
-                    if rx_msg.strip() == self.ADSB_CMD: #uplink command is for ADSB mode
+                    if (self.ADSB_CMD in rx_msg.strip()): #uplink command is for ADSB mode
                         up_cmd = 'ADSB'
-                    elif rx_msg.strip() == self.AIS_CMD: #uplink command is for AIS MODE
+                    elif (self.ADSB_CMD.upper() in rx_msg.strip()): #uplink command is for ADSB mode
+                        up_cmd = 'ADSB'
+                    elif (self.AIS_CMD in rx_msg.strip()): #uplink command is for AIS MODE
                         up_cmd = 'AIS'
-                    else:
-                        up_cmd = self.mode #if unknown uplink command, stay in current mode
+                    elif (self.AIS_CMD.upper() in rx_msg.strip()): #uplink command is for AIS MODE
+                        up_cmd = 'AIS'
+                    
                     
                     if up_cmd != self.mode: #Switch Modes
                         self.logger.info('Received command to switch modes from uplink')
