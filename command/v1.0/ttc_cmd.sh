@@ -24,7 +24,7 @@ DAEMON_NAME=ttc_cmd
 
 # Add any command line options for your daemon here
 #DAEMON_OPTS="--tx-gain=75 --bb-gain=0.4 --rx-gain=10 --sd 10 -g \'/home/root/waveforms/v3\'"
-DAEMON_OPTS=" --tx-gain=75 --bb-gain=0.4 --rx-gain=30 --sd 0 -i 0.042"
+DAEMON_OPTS=" --tx-gain=75 --bb-gain=0.4 --rx-gain=30 --sd 40 -i 0.042"
 DATETIME=$(date -u +%Y%m%d_%H%M%S.%N_UTC)
 LOG=/mnt/log/ttc_cmd.log
 
