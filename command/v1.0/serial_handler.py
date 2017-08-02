@@ -108,8 +108,8 @@ class Serial_Handler(threading.Thread):
     def _Open_Serial(self, dev):
         self.dev = dev        
         #print self.dev
-        #self.ser = serial.Serial(self.dev, self.baud, dsrdtr=False, xonxoff=False, rtscts=False)
-        self.ser = serial.Serial(self.dev, self.baud)
+        self.ser = serial.Serial(self.dev, self.baud, dsrdtr=True)#, xonxoff=False, rtscts=False)
+        #self.ser = serial.Serial(self.dev, self.baud)
         self.logger.info("Opened Serial Port: {:s}".format(self.dev))
         #time.sleep(0.5)
         #self.ser.flushInput()
