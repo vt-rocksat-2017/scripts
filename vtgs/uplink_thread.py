@@ -19,7 +19,7 @@ import numpy
 
 import datetime as dt
 from logger import *
-from watchdog_timer import *
+
 
 class Uplink_Thread(threading.Thread):
     def __init__ (self, options):
